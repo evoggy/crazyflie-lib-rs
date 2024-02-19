@@ -250,7 +250,7 @@ impl Param {
             .wait_packet(PARAM_PORT, _WRITE_CHANNEL, &param_id.to_le_bytes())
             .await?;
 
-        if answer.get_data()[2] == 0 {
+        if answer.get_data()[1] == 0 {
             // The param is tested as being in the TOC so this unwrap cannot fail
             *self.values.lock().await.get_mut(param).unwrap() = value;
             self.notify_watchers(param, value).await;
@@ -258,7 +258,7 @@ impl Param {
         } else {
             Err(Error::ParamError(format!(
                 "Error setting the parameter: code {}",
-                answer.get_data()[2]
+                answer.get_data()[1]
             )))
         }
     }
